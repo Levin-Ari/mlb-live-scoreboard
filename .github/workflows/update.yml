@@ -1,0 +1,39 @@
+# You can name this whatever you want
+name: update
+
+# You will get an error on the automatic updates committing
+# if you do not have this line
+# You didn't need it before, which is why a lot of yml job files
+# you see will not have it (but you need it now!!!)
+permissions:
+  contents: write
+  
+# The 'on' section is about when this is run
+# workflow_dispatch makes there be a button on GitHub to let you run it manually
+# schedule and cron make it run at certain frequencies
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 4-15 * * *'  # ET 12 AM – 11:59 AM = UTC 4–15
+    - cron: '* 16-23 * * *'    # ET 12 PM – 7:59 PM = UTC 16–23
+    - cron: '* 0-3 * * *'      # ET 8 PM – 11:59 PM = UTC 0–3 (next UTC day)
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+    - name: Scraping today's data
+      run:  python mlb-live.py
+    - name: Commit and push any changes
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com"
+        git add -A
+        timestamp=$(date -u)
+        git commit -m "Latest data: ${timestamp}" || exit 0
+        git push
