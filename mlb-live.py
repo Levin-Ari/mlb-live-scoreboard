@@ -44,6 +44,7 @@ else:
     minutes = (time_left.seconds % 3600) // 60
     seconds = (time_left.seconds % 60)
     f.write(f"<h1>Baseball starts in {hours} hours, {minutes} minutes and {seconds} seconds</h1>\n")
+f.write("<p><em>All times eastern</em></p>")
 
 # Get team streaks
 streaks = {}
