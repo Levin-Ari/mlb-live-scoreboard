@@ -14,8 +14,9 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/15 0-11 * * *'  # Every 15 minutes from midnight to 11:59 AM
-    - cron: '* 12-23 * * *'    # Every minute from 12 PM to 11:59 PM
+    - cron: '*/15 4-15 * * *'  # ET 12 AM – 11:59 AM = UTC 4–15
+    - cron: '* 16-23 * * *'    # ET 12 PM – 7:59 PM = UTC 16–23
+    - cron: '* 0-3 * * *'      # ET 8 PM – 11:59 PM = UTC 0–3 (next UTC day)
 jobs:
   daily:
     runs-on: ubuntu-latest
