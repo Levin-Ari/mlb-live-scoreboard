@@ -1,5 +1,5 @@
 # Create HTML file
-f = open('scoreboard.html', 'w')
+f = open('index.html', 'w')
 f.write("""
 <html>
 <head></head>
@@ -110,11 +110,11 @@ for game in games:
         try:
             f.write(f"{data['liveData']['plays']['currentPlay']['result']['description']}<br>\n")
             try:
-                f.write(f"Exit Velocity: {data['liveData']['plays']['currentPlay']['playEvents'][-1]['hitData']['launchSpeed']} MPH<br>")
+                f.write(f"Exit Velocity: {data['liveData']['plays']['currentPlay']['playEvents'][-1]['hitData']['launchSpeed']} MPH<br>\n")
             except: pass
         except:
             try:
-                f.write(f"{data['liveData']['plays']['allPlays'][-2]['result']['description']}<br>")
+                f.write(f"{data['liveData']['plays']['allPlays'][-2]['result']['description']}<br>\n")
             except:
                 f.write("Start of game<br>\n")
             try:
