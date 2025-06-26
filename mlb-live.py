@@ -8,7 +8,11 @@ f.write("""
 
 import requests
 import pprint
+import pytz
 from datetime import datetime, timezone, timedelta
+
+gmt = pytz.timezone('GMT')
+eastern = pytz.timezone("US/Eastern")
 
 # Define function to return stats for a pitcher given their ID
 def pitcher_stats(pitcher_id):
@@ -24,7 +28,7 @@ def pitcher_stats(pitcher_id):
     return(stats)
 
 # Pull today's games from API
-today = datetime.now().strftime('%Y-%m-%d')
+today = datetime.now().astimezone(eastern).strftime('%Y-%m-%d')
 
 url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={today}&hydrate=probablePitcher(note,stats,person),decisions&language=en"
 response = requests.get(url)
@@ -44,7 +48,7 @@ else:
     minutes = (time_left.seconds % 3600) // 60
     seconds = (time_left.seconds % 60)
     f.write(f"<h1>Baseball starts in {hours} hours, {minutes} minutes and {seconds} seconds</h1>\n")
-f.write("<p><em>All times UTC</em></p>")
+f.write("<p><em>All times Eastern</em></p>")
 
 # Get team streaks
 streaks = {}
@@ -84,6 +88,7 @@ for game in games:
     home_record = game['teams']['home']['leagueRecord']
     away_record = game['teams']['away']['leagueRecord']
     game_time = datetime.strptime(game['gameDate'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc).astimezone(tz=None)
+    game_time = game_time.astimezone(eastern)
 # For games that have not yet started
     if game['status']['abstractGameState'] == 'Preview' or game['status']['detailedState'] == 'Warmup':
         f.write(f"<h2>{game_time.strftime('%I:%M %p')}</h2>\n")
