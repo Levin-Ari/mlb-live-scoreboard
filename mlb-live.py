@@ -1,11 +1,3 @@
-# Create HTML file
-f = open('index.html', 'w')
-f.write("""
-<html>
-<head></head>
-<body>
-""")
-
 import requests
 import pprint
 import pytz
@@ -37,9 +29,23 @@ data = response.json()
 games = data['dates'][0]['games']
 game_ids = [game['gamePk'] for game in games]
 
-# Print headline
 time_left = (datetime.strptime(games[0]['gameDate'],"%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) - datetime.now(timezone.utc))
 year = datetime.now().year
+
+# Create HTML file
+f = open('index.html', 'w')
+f.write(f"""
+<html>
+<head>
+<title>MLB Live Scoreboard: {today}</title>
+<link rel="stylesheet" href="bootstrap.css">
+<link rel="icon" type="image/x-icon" href="favicon.ico"     
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ari Levin">
+</head>
+<body>
+""")
+
 
 if time_left.days < 0:
     f.write("<h1>Baseball has started!</h1>\n")
@@ -111,7 +117,7 @@ for game in games:
         away_score = game['teams']['away']['score']
         inning = f"{data['liveData']['linescore']['inningHalf']} {data['liveData']['linescore']['currentInningOrdinal']}"
         f.write(f"<h2>{inning}:</h2>\n")
-        f.write(f"<h3>{away_team} {away_score}, {home_team} {home_score}</h3>\n")
+        f.write(f"<h5>{away_team} {away_score}, {home_team} {home_score}</h5>\n")
         f.write(f"<p>{data['liveData']['plays']['currentPlay']['matchup']['pitcher']['fullName']} pitching to {data['liveData']['plays']['currentPlay']['matchup']['batter']['fullName']}.<br>\n")
         try:
             f.write(f"{data['liveData']['plays']['currentPlay']['result']['description']}<br>\n")
@@ -155,7 +161,9 @@ for game in games:
         try:
             video = data['highlights']['highlights']['items'][0]['playbacks'][0]['url']
             videotitle = data['highlights']['highlights']['items'][0]['headline']
-            f.write(f"<p><a href={video} target='new'>{videotitle}</a></p>\n")
+            f.write(f"<video width='480' height='270' controls>\n<source src=\"{video}\">\n")
+            f.write(f"<a href={video} target='new'>{videotitle}</a>\n")
+            f.write(f"</video>\n<br>\n")
         except: pass
             
         try:
