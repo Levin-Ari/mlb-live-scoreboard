@@ -109,6 +109,8 @@ for game in games:
             f.write(f"{home_team} ({home_record['wins']}-{home_record['losses']}, {streaks[home_id]}) -- {home_pitcher_name}</p>\n")
     
     elif game['status']['abstractGameState'] == 'Live':
+        if game['status']['detailedState'] == 'Suspended':
+            continue
         url = f"https://statsapi.mlb.com/{game['link']}"
         response = requests.get(url)
         data = response.json()
