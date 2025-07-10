@@ -54,7 +54,8 @@ else:
     minutes = (time_left.seconds % 3600) // 60
     seconds = (time_left.seconds % 60)
     f.write(f"<h1>Baseball starts in {hours} hours, {minutes} minutes and {seconds} seconds</h1>\n")
-f.write("<p><em>All times Eastern</em></p>")
+f.write("<p><em>All times Eastern</em></p>\n")
+f.write(f"<p><em>Last updated:{datetime.now().strftime("%I %p %S")}</em></p>\n")
 
 # Get team streaks
 streaks = {}
@@ -109,7 +110,7 @@ for game in games:
             f.write(f"{home_team} ({home_record['wins']}-{home_record['losses']}, {streaks[home_id]}) -- {home_pitcher_name}</p>\n")
     
     elif game['status']['abstractGameState'] == 'Live':
-        if game['status']['detailedState'] == 'Suspended':
+        if game['status']['detailedState'] in['Suspended', 'Postponed']:
             continue
         url = f"https://statsapi.mlb.com/{game['link']}"
         response = requests.get(url)
