@@ -55,7 +55,7 @@ else:
     seconds = (time_left.seconds % 60)
     f.write(f"<h1>Baseball starts in {hours} hours, {minutes} minutes and {seconds} seconds</h1>\n")
 f.write("<p><em>All times Eastern</em></p>\n")
-f.write(f"<p><em>Last updated:{datetime.now().strftime("%I %p %S")}</em></p>\n")
+f.write(f"<p><em>Last updated:{datetime.now(timezone.utc).astimezone(eastern).strftime('%I %p %S')}</em></p>\n")
 
 # Get team streaks
 streaks = {}
